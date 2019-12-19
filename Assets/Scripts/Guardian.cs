@@ -58,10 +58,10 @@ public class Guardian : PopScript
         }
         else
         {
-            newPop = MasterScript.Instance.deads[deadsIndex];
+            newPop = MasterScript.Instance.deads[deadsIndex].gameObject;
             newPop.SetActive(true);
-            MasterScript.Instance.deads.Remove(newPop);
-            MasterScript.Instance.Pops.Add(newPop);
+            MasterScript.Instance.deads.Remove(newPop.GetComponent<PopScript>());
+            MasterScript.Instance.Pops.Add(newPop.GetComponent<PopScript>());
         }
 
         newPop.GetComponent<PopScript>().Respawn();

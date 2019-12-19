@@ -64,10 +64,10 @@ public class Dove : PopScript
         }
         else
         {
-            newPop = MasterScript.Instance.deads[deadsIndex];
+            newPop = MasterScript.Instance.deads[deadsIndex].gameObject;
             newPop.SetActive(true);
-            MasterScript.Instance.deads.Remove(newPop);
-            MasterScript.Instance.Pops.Add(newPop);
+            MasterScript.Instance.deads.Remove(newPop.GetComponent<PopScript>());
+            MasterScript.Instance.Pops.Add(newPop.GetComponent<PopScript>());
         }
 
         newPop.GetComponent<PopScript>().Respawn();
@@ -81,9 +81,9 @@ public class Dove : PopScript
     {
         base.MyRoutine(myRay);
         int guardianCount = 0;
-        foreach (GameObject t in MasterScript.Instance.Pops)
+        foreach (PopScript t in MasterScript.Instance.Pops)
         {
-            if (t.GetComponent<Guardian>())
+            if (t is Guardian)
                 guardianCount++;
         }
         if (guardianCount == 0)
@@ -106,10 +106,10 @@ public class Dove : PopScript
             }
             else
             {
-                newPop = MasterScript.Instance.deads[deadsIndex];
+                newPop = MasterScript.Instance.deads[deadsIndex].gameObject;
                 newPop.SetActive(true);
-                MasterScript.Instance.deads.Remove(newPop);
-                MasterScript.Instance.Pops.Add(newPop);
+                MasterScript.Instance.deads.Remove(newPop.GetComponent<PopScript>());
+                MasterScript.Instance.Pops.Add(newPop.GetComponent<PopScript>());
             }
 
             newPop.GetComponent<PopScript>().Respawn();

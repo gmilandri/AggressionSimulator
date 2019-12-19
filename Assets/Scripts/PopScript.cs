@@ -24,7 +24,7 @@ public class PopScript : MonoBehaviour
 
     private void Awake()
     {
-        MasterScript.Instance.Pops.Add(this.gameObject);
+        MasterScript.Instance.Pops.Add(this);
         Count++;
         gameObject.name = "Pop n." + Count.ToString();
         EnergyRemaining = 3;
@@ -39,10 +39,10 @@ public class PopScript : MonoBehaviour
         transform.parent = myParent.transform;
     }
 
-    private void Update()
+    public void MyUpdate()
     {
-        if (Time.frameCount % 3 == 0)
-        {
+        //if (Time.frameCount % 3 == 0)
+        //{
             if (!isDying)
             {
                 ray = new Ray(transform.position, transform.forward);
@@ -53,7 +53,7 @@ public class PopScript : MonoBehaviour
                 StartCoroutine(SocialEncounters());
             if (!coroutineOngoing)
                 StartCoroutine(FoodSpending());
-        }
+        //}
 
     }
 
@@ -156,8 +156,8 @@ public class PopScript : MonoBehaviour
         anim.Play("Death");
         while (GetComponent<Animation>().isPlaying)
             yield return null;
-        MasterScript.Instance.Pops.Remove(gameObject);
-        MasterScript.Instance.deads.Add(gameObject);
+        MasterScript.Instance.Pops.Remove(this);
+        MasterScript.Instance.deads.Add(this);
         EnergyRemaining = 3;
         myCurrentTarget = null;
         coroutineOngoing = false;
@@ -204,14 +204,14 @@ public class PopScript : MonoBehaviour
         return tMin;
     }
 
-    public Transform GetClosestDove(List<GameObject> doves)
+    public Transform GetClosestDove(List<PopScript> doves)
     {
         Transform tMin = null;
         float minDist = Mathf.Infinity;
         Vector3 currentPos = transform.position;
-        foreach (GameObject t in doves)
+        foreach (PopScript t in doves)
         {
-            float dist = Vector3.Distance(t.transform.position, currentPos);
+            float dist = Vector3.Distance(t.gameObject.transform.position, currentPos);
             if (!t.GetComponent<Dove>() || (t.GetComponent<Dove>() && t.GetComponent<Dove>().EnergyRemaining < 4))
                 continue;
             if (dist < minDist)
@@ -223,14 +223,14 @@ public class PopScript : MonoBehaviour
         return tMin;
     }
 
-    public Transform GetClosestHawk(List<GameObject> hawks)
+    public Transform GetClosestHawk(List<PopScript> hawks)
     {
         Transform tMin = null;
         float minDist = Mathf.Infinity;
         Vector3 currentPos = transform.position;
-        foreach (GameObject t in hawks)
+        foreach (PopScript t in hawks)
         {
-            float dist = Vector3.Distance(t.transform.position, currentPos);
+            float dist = Vector3.Distance(t.gameObject.transform.position, currentPos);
             if (!t.GetComponent<Hawk>())
                 continue;
             if (dist < minDist)

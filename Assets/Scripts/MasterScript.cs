@@ -13,10 +13,10 @@ public class MasterScript : Singleton<MasterScript>
 	public GameObject popPrefab;
 	public GameObject foodPrefab;
 	public GameObject heartPrefab;
-	public List<GameObject> Pops;
+	public List<PopScript> Pops;
 	public Transform[] Meals;
 	public float squareSize;
-	public List<GameObject> deads;
+	public List<PopScript> deads;
 
 	public int timeSpeed = 1;
 
@@ -29,9 +29,9 @@ public class MasterScript : Singleton<MasterScript>
 
 	void Start()
 	{
-		Pops = new List<GameObject>();
+		//Pops = new List<GameObject>();
 		Meals = new Transform[foodQuantity];
-		deads = new List<GameObject>();
+		deads = new List<PopScript>();
 		
 		for (int i = 0; i < startingDovePops; i++)
 		{
@@ -60,7 +60,9 @@ public class MasterScript : Singleton<MasterScript>
 	void Update()
 	{
 		Time.timeScale = timeSpeed;
-
+		var tempPops = new List<PopScript>(Pops);
+		foreach (var pop in tempPops)
+			pop.MyUpdate();
 	}
 
 	void SpawnFood ()

@@ -154,8 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FoodEnergy: 3
   startingDovePops: 5
-  startingHawkPops: 0
-  startingGuardianPops: 1
+  startingHawkPops: 5
+  startingGuardianPops: 0
   foodQuantity: 40
   popPrefab: {fileID: 8333802278215739393, guid: 7fdf774bc1acfdb4681aae723f2ec95c,
     type: 3}
