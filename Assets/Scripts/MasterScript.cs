@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MasterScript : MonoBehaviour
+public class MasterScript : Singleton<MasterScript>
 {
-
+	public int FoodEnergy;
 	public int startingDovePops = 0;
 	public int startingHawkPops = 0;
 	public int startingGuardianPops = 0;
@@ -15,14 +15,16 @@ public class MasterScript : MonoBehaviour
 	public GameObject heartPrefab;
 	public List<GameObject> Pops;
 	public Transform[] Meals;
-	public float radius;
+	public float squareSize;
 	public List<GameObject> deads;
 
 	public int timeSpeed = 1;
 
-	private void Awake()
+	public override void Awake()
 	{
-		radius = (transform.localScale.x - 4f) / 2f;
+		squareSize = transform.localScale.x - 1;
+
+		GameObject.Find("NavMesh").GetComponent<NavMeshSurface>().BuildNavMesh();
 	}
 
 	void Start()
@@ -36,26 +38,26 @@ public class MasterScript : MonoBehaviour
 			GameObject newPop = Instantiate(popPrefab);
 			newPop.GetComponent<MeshRenderer>().material.color = Color.cyan;
 			newPop.AddComponent<Dove>();
-			PlacePops();
+			PlacePop(newPop);
 		}
 		for (int i = 0; i < startingHawkPops; i++)
 		{
 			GameObject newPop = Instantiate(popPrefab);
 			newPop.GetComponent<MeshRenderer>().material.color = Color.red;
 			newPop.AddComponent<Hawk>();
-			PlacePops();
+			PlacePop(newPop);
 		}
 		for (int i = 0; i < startingGuardianPops; i++)
 		{
 			GameObject newPop = Instantiate(popPrefab);
 			newPop.GetComponent<MeshRenderer>().material.color = Color.yellow;
 			newPop.AddComponent<Guardian>();
-			PlacePops();
+			PlacePop(newPop);
 		}
 		SpawnFood();
 	}
 
-	private void Update()
+	void Update()
 	{
 		Time.timeScale = timeSpeed;
 
@@ -65,28 +67,16 @@ public class MasterScript : MonoBehaviour
 	{
 		for (int i = 0; i < foodQuantity; i++)
 		{
-			float randomAngle = Random.Range(0f,Mathf.PI*2);
-			float maxPosX = Mathf.Cos(randomAngle) * radius;
-			float maxPosZ = Mathf.Sin(randomAngle) * radius;
-			float randomX = Random.Range(0f,maxPosX);
-			float randomZ = Random.Range(0f,maxPosZ);
-			GameObject newFood = (GameObject)Instantiate(foodPrefab, new Vector3(randomX, 0, randomZ), Quaternion.identity);
+			GameObject newFood = Instantiate(foodPrefab);
+			newFood.transform.position = new Vector3(Random.Range(1, squareSize), 0, Random.Range(1, squareSize));
 			Meals[i] = newFood.transform;
 		}	
 	}
 
-	void PlacePops ()
+	void PlacePop (GameObject pop)
 	{
-		for (int i = 0; i < Pops.Count; i++)
-		{
-			float randomAngle = Random.Range(0f, Mathf.PI * 2);
-			float maxPosX = Mathf.Cos(randomAngle) * radius;
-			float maxPosZ = Mathf.Sin(randomAngle) * radius;
-			float randomX = Random.Range(0f, maxPosX);
-			float randomZ = Random.Range(0f, maxPosZ);
-			Vector3 pos = new Vector3(randomX, 0.575f, randomZ);
-			Pops[i].GetComponent<NavMeshAgent>().Warp(pos);
-		}
+		pop.transform.position = new Vector3(Random.Range(1, squareSize), 0, Random.Range(1, squareSize));
+		pop.GetComponent<NavMeshAgent>().enabled = true;
 	}
 
 }

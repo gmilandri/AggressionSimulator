@@ -4,51 +4,56 @@ using UnityEngine;
 
 public class FoodScript : MonoBehaviour
 {
+    //private bool m_timeOngoing;
+    public bool IsBeingApproached { get; private set; }
+    //public bool IsRegrowing { get; private set; }
 
-    public bool isBeingApproached = false;
-    private MasterScript masterScript;
-    [HideInInspector] public float radius;
-    private bool timeOngoing;
-    private float offset;
-    public bool regrowing;
-
-    private void Start()
+    void Start()
     {
-        GameObject master = GameObject.FindGameObjectWithTag("GameController");
-        masterScript = master.GetComponent<MasterScript>();
-        radius = masterScript.radius;
-        StartCoroutine("Time");
+        //StartCoroutine(Time());
 
         GameObject myParent = GameObject.Find("FoodParent");
         transform.parent = myParent.transform;
     }
 
-    private void Update()
+    //void Update()
+    //{
+    //    if (!m_timeOngoing)
+    //        StartCoroutine(Time());
+    //}
+
+    //public void StartRegrowing()
+    //{
+    //    IsRegrowing = true;
+    //}
+    public void Approach()
     {
-        if (!timeOngoing)
-            StartCoroutine("Time");
+        IsBeingApproached = true;
+    }
+    public void StopApproach()
+    {
+        IsBeingApproached = false;
     }
 
-    IEnumerator Time()
-    {
-        timeOngoing = true;
-        offset = 10f + Random.Range(0f, 10f);
-        yield return new WaitForSeconds(offset);
-        if (!isBeingApproached)
-        {
-            float randomAngle = Random.Range(0f, Mathf.PI * 2);
-            float maxPosX = Mathf.Cos(randomAngle) * radius;
-            float maxPosZ = Mathf.Sin(randomAngle) * radius;
-            float randomX = Random.Range(0f, maxPosX);
-            float randomZ = Random.Range(0f, maxPosZ);
+    //IEnumerator Time()
+    //{
+    //    m_timeOngoing = true;
+    //    float offset = 10f + Random.Range(0f, 10f);
+    //    yield return new WaitForSeconds(offset);
+    //    if (!IsBeingApproached)
+    //    {
+    //        Respawn();
+    //        if (!IsRegrowing)
+    //            IsRegrowing = true;
+    //        else
+    //            IsRegrowing = false;
+    //    }
+    //    m_timeOngoing = false;
+    //}
 
-            transform.position = new Vector3(randomX, 0, randomZ);
-            if (!regrowing)
-                regrowing = true;
-            else
-                regrowing = false;
-        }
-        timeOngoing = false;
+    public void Respawn()
+    {
+        transform.position = new Vector3(Random.Range(1, MasterScript.Instance.squareSize), 0, Random.Range(1, MasterScript.Instance.squareSize));
     }
 
 }
